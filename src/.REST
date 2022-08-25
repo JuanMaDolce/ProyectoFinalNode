@@ -1,0 +1,30 @@
+//POST http://localhost:8080/productos HTTP/1.1
+//content-type:application/json
+
+//{
+//   "title": "Celular", 
+//   "price": 200,
+//   "thumbnail": "promo"
+//}
+
+
+//PUT http://localhost:8080/productos/3 HTTP/1.1 
+//content-type:application/json
+
+//{
+//"title": "Celular", 
+//"price": 200,
+//"thumbnail": "Regalado"
+//}
+
+ // DELETE http://localhost:8080/productos/1 HTTP/1.1
+
+//POST http://localhost:8080/carrito HTTP/1.1
+//content-type:application/json
+
+// DELETE http://localhost:8080/carrito/2 HTTP/1.1
+
+//POST http://localhost:8080/carrito/4/productos HTTP/1.1
+//content-type:application/json
+
+DELETE http://localhost:8080/carrito/6/productos/2 HTTP/1.1

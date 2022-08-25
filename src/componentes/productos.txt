@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Celular",
+    "price": 200,
+    "thumbnail": "promo",
+    "timestamp": "24/8/2022, 22:34:05",
+    "stock": 1,
+    "id": 1
+  }
+]
