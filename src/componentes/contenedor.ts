@@ -38,8 +38,18 @@ constructor(title: string, price: number, thumbnail: string) {
         if(dataFileParse.length){
             let id = dataFileParse[dataFileParse.length - 1].id + 1
             fs.writeFileSync("./src/componentes/productos.txt", JSON.stringify([...dataFileParse, {...newProduct, id: id}], null, 2))
+            const rta ={
+                newProduct,
+                id
+            }
+            return rta
         } else {
             fs.writeFileSync("./src/componentes/productos.txt", JSON.stringify([...dataFileParse, {...newProduct, id: 1}], null, 2))
+            const rta2 ={
+                newProduct,
+                id: 1
+            }
+            return rta2
         } 
     }
     getById(id) {
@@ -97,5 +107,5 @@ constructor(title: string, price: number, thumbnail: string) {
             } catch (err) {
                 console.log(err)
             }
-        } 
+        }
     }

@@ -1,10 +1,18 @@
 import express from 'express'
 import {Contenedor} from "./componentes/contenedor"
 import {Carrito} from "./componentes/carrito"
+
+const {Router} = express
+
+
 require('dotenv').config()
 
 const app = express()
+const routerProductos = Router()
+const routerCarrito = Router()
+
 app.use(express.json())
+app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
 
 const object = new Contenedor("", 0 ,"")
@@ -14,7 +22,7 @@ const admin = true
 
 // API PRODUCTOS
 
-app.get('/productos', (req,res) =>{
+routerProductos.get('/', (req,res) =>{
     const list = object.getAll()
     const f = async () =>{
         res.json(await list)
@@ -22,15 +30,16 @@ app.get('/productos', (req,res) =>{
     f()
 })
 
-app.get('/productos/:id', (req,res) =>{
+routerProductos.get('/:id', (req,res) =>{
     const {id} = req.params
         res.json(object.getById(Number(id)))
 })
 
-app.post('/productos', (req,res) =>{
+routerProductos.post('/', (req,res) =>{
     const {title,price,thumbnail} = req.body
     if(admin){
-    res.send(object.save(title,price,thumbnail))
+        const product = object.save(title,price,thumbnail)
+    res.send(product)
     } else {
         res.send({
             error: '-1, descripción: ruta no autorizado'
@@ -38,7 +47,7 @@ app.post('/productos', (req,res) =>{
     }
 })
 
-app.put('/productos/:id', (req,res)=>{
+routerProductos.put('/:id', (req,res)=>{
     const {id} = req.params
     const {title,price,thumbnail} = req.body
     if(admin){
@@ -50,7 +59,7 @@ app.put('/productos/:id', (req,res)=>{
     }
 })
 
-app.delete('/productos/:id', (req,res)=>{
+routerProductos.delete('/:id', (req,res)=>{
     const {id} = req.params
     if(admin){
     res.send(object.deleteById(Number(id)))
@@ -63,16 +72,17 @@ app.delete('/productos/:id', (req,res)=>{
 
 // API CARRITO
 
-app.get('/carrito/:id/productos', (req,res) =>{
+routerCarrito.get('/:id/productos', (req,res) =>{
     const {id} = req.params
         res.json(cart.getCartById(Number(id)))
 })
 
-app.post('/carrito', (req,res) =>{
-    res.send(cart.saveCart())
+routerCarrito.post('/', (req,res) =>{
+    const newCartAdd = cart.saveCart()
+    res.send(newCartAdd)
 })
 
-app.delete('/carrito/:id', (req,res)=>{
+routerCarrito.delete('/:id', (req,res)=>{
     const {id} = req.params
     if(admin){
     res.send(cart.deleteCartByID(Number(id)))
@@ -81,7 +91,7 @@ app.delete('/carrito/:id', (req,res)=>{
     }
 })
 
-app.delete('/carrito/:id/productos/:id_prod', (req,res)=>{
+routerCarrito.delete('/:id/productos/:id_prod', (req,res)=>{
     const {id,id_prod} = req.params
     if(admin){
     res.send(cart.deleteProductByID(Number(id),Number(id_prod)))
@@ -90,12 +100,16 @@ app.delete('/carrito/:id/productos/:id_prod', (req,res)=>{
     }
 }) 
 
-app.post('/carrito/:id/productos', (req,res) =>{
+routerCarrito.post('/:id/productos', (req,res) =>{
     const {id} = req.params
-        res.json(cart.addProductToCart(Number(id)))
+    const productToCart = cart.addProductToCart(Number(id))
+        res.json(productToCart)
 })
 
 const PORT = process.env.PORT
+
+app.use('/api/productos', routerProductos)
+app.use('/api/carrito', routerCarrito)
 
 app.listen(PORT, ()=>{
     console.log('server is running on port 8080')

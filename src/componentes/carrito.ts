@@ -33,8 +33,18 @@ constructor(timestamp: string) {
         if(cartFileParse.length){
             let id = cartFileParse[cartFileParse.length - 1].id + 1
             fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([...cartFileParse, {...newCart, id: id}], null, 2))
+            const rta = {
+                newCart,
+                id
+            }
+            return rta
         } else {
             fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([...cartFileParse, {...newCart, id: 1}], null, 2))
+            const rta2 = {
+                newCart,
+                id: 1
+            }
+            return rta2
         }  
     } 
     deleteCartByID(id){
@@ -55,10 +65,10 @@ constructor(timestamp: string) {
                 console.log(err)
             }
         }
-deleteProductByID(id,id_prod){
+        deleteProductByID(id,id_prod){
             let cartFile = fs.readFileSync("./src/componentes/carrito.txt", "utf-8")
             let cartFileParse = JSON.parse(cartFile)
-                if (cartFileParse.find( c => c.id === id)){
+                if (cartFileParse.find(c => c.id === id)){
                     
                     const cart = cartFileParse.find( c => c.id === id)
                     
@@ -103,8 +113,22 @@ deleteProductByID(id,id_prod){
             if(cartFileParse.length){
                 let id = cartFileParse[cartFileParse.length - 1].id + 1
                 fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([...cartFileParse, {...newChart, id: id}], null, 2))
+
+                const productToCart = {
+                    message: 'Producto agregado al carrito',
+                    newChart,
+                    id
+                }
+                return productToCart
+
             } else {
                 fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([...cartFileParse, {...newChart, id: 1}], null, 2))
+                const productToCart2 = {
+                    message: 'Producto agregado al carrito',
+                    newChart,
+                    id: 1
+                }
+                return productToCart2
             }  
         } 
 }
