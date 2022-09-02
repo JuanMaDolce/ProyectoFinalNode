@@ -4,13 +4,13 @@
 //content-type:application/json
 
 //{
-//   "title": "Tablet", 
+//  "title": "Televisor", 
 //   "price": 200,
 //   "thumbnail": "promo"
 //}
 
 
-//PUT http://localhost:8080/api/productos/1 HTTP/1.1 
+//PUT http://localhost:8080/api/productos/18 HTTP/1.1 
 //content-type:application/json
 
 //{
@@ -19,7 +19,7 @@
 //    "thumbnail": "Regalado"
 //}
 
-//DELETE http://localhost:8080/api/productos/1 HTTP/1.1
+//DELETE http://localhost:8080/api/productos/18 HTTP/1.1
 
 // API CARRITO ----------------------------------------------------------->
 
@@ -31,4 +31,4 @@
 //POST http://localhost:8080/api/carrito/3/productos HTTP/1.1
 //content-type:application/json
 
-//DELETE http://localhost:8080/api/carrito/2/productos/1 HTTP/1.1
+//DELETE http://localhost:8080/api/carrito/1/productos/3 HTTP/1.1

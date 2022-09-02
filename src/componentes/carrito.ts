@@ -2,6 +2,7 @@ import fs from "fs"
 
 let time = new Date()
 
+const arrayProducts: any [] = []
 
 export class Carrito {
     private timestamp: string;
@@ -68,8 +69,9 @@ constructor(timestamp: string) {
         deleteProductByID(id,id_prod){
             let cartFile = fs.readFileSync("./src/componentes/carrito.txt", "utf-8")
             let cartFileParse = JSON.parse(cartFile)
+
                 if (cartFileParse.find(c => c.id === id)){
-                    
+
                     const cart = cartFileParse.find( c => c.id === id)
                     
                     const cartProducts = cartFileParse.find( c => c.id === id).product
@@ -78,11 +80,12 @@ constructor(timestamp: string) {
 
                     const newCart = {
                         timestamp: cart.timestamp,
-                        products: newProducts,
-                        id: cart.id
+                        id: cart.id,
+                        product: newProducts                        
                     }
 
                     const newArray = cartFileParse.filter(c => c.id !== id)
+
                     newArray.unshift(newCart)
                     fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify(newArray, null, 2))
                     const cartUpload = {
@@ -102,33 +105,34 @@ constructor(timestamp: string) {
             let dataFileParse = JSON.parse(dataFile)
 
             let product: object = dataFileParse.find( c => c.id === id);
-            let arrayProducts: any [] = []
+            
+            const carrito = cartFileParse[0]
 
             arrayProducts.push(product)
 
-            let newChart = {
-                timestamp: time.toLocaleString(),
-                product: arrayProducts
-            }            
-            if(cartFileParse.length){
-                let id = cartFileParse[cartFileParse.length - 1].id + 1
-                fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([...cartFileParse, {...newChart, id: id}], null, 2))
-
-                const productToCart = {
-                    message: 'Producto agregado al carrito',
-                    newChart,
-                    id
-                }
+            const productToCart = {
+                message: 'Producto agregado al carrito',
+                product
+            }
+            if(cartFileParse.length && dataFileParse.find(p => p.id === id)){
+                let cart = {
+                    timestamp: carrito.timestamp,
+                    id: carrito.id,
+                    product: [...carrito.product, product]
+                }   
+                fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([cart], null, 2))
                 return productToCart
-
-            } else {
-                fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([...cartFileParse, {...newChart, id: 1}], null, 2))
-                const productToCart2 = {
-                    message: 'Producto agregado al carrito',
-                    newChart,
-                    id: 1
+            } else if (dataFileParse.find(p => p.id === id)){
+                let newCart = {
+                    timestamp: time.toLocaleString(),
+                    id: 1,
+                    product: arrayProducts
                 }
-                return productToCart2
-            }  
+                fs.writeFileSync("./src/componentes/carrito.txt", JSON.stringify([newCart], null, 2))
+                return productToCart
+            }  else {
+                const error = 'ID producto inexistente'
+                return error
+            }
         } 
 }

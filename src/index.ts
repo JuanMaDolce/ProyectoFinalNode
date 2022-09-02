@@ -18,7 +18,17 @@ app.use(express.urlencoded({extended: true}))
 const object = new Contenedor("", 0 ,"")
 const cart = new Carrito("")
 
-const admin = true
+let admin = true
+
+const permisos = (req, res, next) =>{
+    if (admin){
+        next()
+    } else {
+        res.send({
+            error: '-1, descripción: ruta no autorizado'
+        })
+    }
+}
 
 // API PRODUCTOS
 
@@ -35,39 +45,22 @@ routerProductos.get('/:id', (req,res) =>{
         res.json(object.getById(Number(id)))
 })
 
-routerProductos.post('/', (req,res) =>{
+routerProductos.post('/', permisos, (req,res) =>{
     const {title,price,thumbnail} = req.body
-    if(admin){
-        const product = object.save(title,price,thumbnail)
+    const product = object.save(title,price,thumbnail)
     res.send(product)
-    } else {
-        res.send({
-            error: '-1, descripción: ruta no autorizado'
-        })
-    }
+
 })
 
-routerProductos.put('/:id', (req,res)=>{
+routerProductos.put('/:id', permisos, (req,res)=>{
     const {id} = req.params
     const {title,price,thumbnail} = req.body
-    if(admin){
     res.send( object.upload(Number(id),title,price,thumbnail))
-    } else {
-        res.send({
-            error: '-1, descripción: ruta no autorizado'
-        })
-    }
 })
 
-routerProductos.delete('/:id', (req,res)=>{
+routerProductos.delete('/:id', permisos,(req,res)=>{
     const {id} = req.params
-    if(admin){
     res.send(object.deleteById(Number(id)))
-    } else {
-        res.send({
-            error: '-1, descripción: ruta no autorizado'
-        })
-    }
 })
 
 // API CARRITO
@@ -82,22 +75,14 @@ routerCarrito.post('/', (req,res) =>{
     res.send(newCartAdd)
 })
 
-routerCarrito.delete('/:id', (req,res)=>{
+routerCarrito.delete('/:id', permisos,(req,res)=>{
     const {id} = req.params
-    if(admin){
     res.send(cart.deleteCartByID(Number(id)))
-    } else {
-        res.send('No eres el administrador')
-    }
 })
 
-routerCarrito.delete('/:id/productos/:id_prod', (req,res)=>{
+routerCarrito.delete('/:id/productos/:id_prod',permisos, (req,res)=>{
     const {id,id_prod} = req.params
-    if(admin){
     res.send(cart.deleteProductByID(Number(id),Number(id_prod)))
-    } else {
-        res.send('No eres el administrador')
-    }
 }) 
 
 routerCarrito.post('/:id/productos', (req,res) =>{
